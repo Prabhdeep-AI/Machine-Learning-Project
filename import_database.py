@@ -1,8 +1,8 @@
 import requests
 import json
 
-# I am excluding mega evolutions, all Pikachu variants, gigantamax variants, 
-# and totem variants from my analysis, as well as legendary and mythical Pokemon
+# We are excluding mega evolutions, all Pikachu variants, gigantamax variants, 
+# and totem variants from analysis, as well as legendary and mythical Pokemon
 disqualifying_strings = ["mega", "pikachu-", "gmax", "totem"]
 
 pokemon_list = requests.get("https://pokeapi.co/api/v2/pokemon/?limit=2000").json()
@@ -33,7 +33,7 @@ with open("pokemon_data.json", "w") as file:
             else:
                 file.write(",\n")
 
-            # Only pulling the name, types, base state total, weight, and height
+            # Only pulling the name, types, base stats, weight, and height
             # from the database
             current_pokemon_json = dict()
             current_pokemon_json["name"] = current_pokemon["name"]
@@ -50,7 +50,9 @@ with open("pokemon_data.json", "w") as file:
             base_stat_total = 0
 
             for stat in current_pokemon["stats"]:
+                stat_name = stat["stat"]["name"]
                 base_stat_total += stat["base_stat"]
+                current_pokemon_json[stat_name] = stat["base_stat"]
             current_pokemon_json["base_stat_total"] = base_stat_total
             json.dump(current_pokemon_json, file)
 
