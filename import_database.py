@@ -3,7 +3,7 @@ import json
 
 # We are excluding mega evolutions, all Pikachu variants, gigantamax variants, 
 # and totem variants from analysis, as well as legendary and mythical Pokemon
-disqualifying_strings = ["mega", "pikachu-", "gmax", "totem"]
+disqualifying_strings = ["-mega", "pikachu-", "gmax", "totem"]
 
 # Limit set to 2000, there are definitely under 2000 pokemon so this just pulls everything
 pokemon_list = requests.get("https://pokeapi.co/api/v2/pokemon/?limit=2000").json()
