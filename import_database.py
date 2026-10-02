@@ -5,10 +5,11 @@ import json
 # and totem variants from analysis, as well as legendary and mythical Pokemon
 disqualifying_strings = ["mega", "pikachu-", "gmax", "totem"]
 
+# Limit set to 2000, there are definitely under 2000 pokemon so this just pulls everything
 pokemon_list = requests.get("https://pokeapi.co/api/v2/pokemon/?limit=2000").json()
 
-# For storage, everything will be dumped to a .json file
-# This way, API calls only have to be made once
+# We're dumping everything to a .json file
+# Faster to access this way, API calls take a while
 with open("pokemon_data.json", "w") as file:
     file.write("[\n")
     first_entry = True
@@ -17,8 +18,7 @@ with open("pokemon_data.json", "w") as file:
         is_valid_pokemon = True
         current_pokemon_species = requests.get(current_pokemon["species"]["url"]).json()
 
-        # This section checks to see if the given Pokemon is legendary, mythical,
-        # or falls into one of the aforementioned disallowed categories
+        # Checking if the pokemon is in one of the categories marked for exclusion
         if(current_pokemon_species["is_legendary"] or 
            current_pokemon_species["is_mythical"]):
             is_valid_pokemon = False
@@ -26,8 +26,9 @@ with open("pokemon_data.json", "w") as file:
             if(disqualifier in current_pokemon["name"]):
                 is_valid_pokemon = False
 
-        # Only add the Pokemon if it fits the criteria
+        # Only add the Pokemon if it is not marked for exclusion
         if(is_valid_pokemon):
+            # This ensures that commas are only added after json entries
             if first_entry:
                 first_entry = False
             else:
